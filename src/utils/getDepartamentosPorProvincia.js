@@ -1,0 +1,53 @@
+export function getDepartamentosPorProvincia(provincia) {
+  const departamentosPorProvincia = {
+    Salta: [
+      'Anta',
+      'Cachi',
+      'Cafayate',
+      'Capital',
+      'Cerrillos',
+      'Chicoana',
+      'General Güemes',
+      'General San Martín',
+      'Guachipas',
+      'Iruya',
+      'La Caldera',
+      'La Candelaria',
+      'La Poma',
+      'La Viña',
+      'Los Andes',
+      'Metán',
+      'Molinos',
+      'Orán',
+      'Rivadavia',
+      'Rosario de la Frontera',
+      'Rosario de Lerma',
+      'San Carlos',
+      'Santa Victoria',
+    ],
+    Misiones: [
+      'Apóstoles',
+      'Cainguás',
+      'Candelaria',
+      'Capital',
+      'Concepción',
+      'Eldorado',
+      'General Manuel Belgrano',
+      'Guaraní',
+      'Iguazú',
+      'Leandro N. Alem',
+      'Libertador General San Martín',
+      'Montecarlo',
+      'Oberá',
+      'San Ignacio',
+      'San Javier',
+      'San Pedro',
+      'Veinticinco de Mayo',
+    ],
+  };
+
+  return (departamentosPorProvincia[provincia] || []).map((nombre) => ({
+    label: nombre,
+    value: nombre,
+  }));
+}
