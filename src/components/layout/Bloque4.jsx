@@ -9,7 +9,8 @@ import {
   DollarSign,
   Download,
 } from 'lucide-react';
-import { useExportPDF } from '@/hooks/useExportPDF';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const Bloque4 = ({
   provincia,
@@ -18,12 +19,25 @@ const Bloque4 = ({
   cantidadDocentes,
   presupuestoTotal,
   costoTotal,
-  exportRefs,
 }) => {
-  const { exportPDF } = useExportPDF();
+  const handleGeneratePDF = async () => {
+    const input = document.getElementById('bloque4-pdf');
 
-  const handleExport = () => {
-    exportPDF(exportRefs);
+    if (!input) {
+      console.error('No se encontró el elemento para generar el PDF');
+      return;
+    }
+
+    const canvas = await html2canvas(input, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save('ficha_sintesis_programa.pdf');
   };
 
   return (
@@ -39,7 +53,7 @@ const Bloque4 = ({
         </CardHeader>
 
         <CardContent>
-          <div className="p-4 border rounded-md shadow-sm">
+          <div id="bloque4-pdf" className="p-4 border rounded-md shadow-sm">
             <h2 className="text-xl font-semibold mb-4">Ficha Síntesis del Programa</h2>
             <p className="flex items-center gap-2 mb-1">
               <MapPin className="w-4 h-4 text-gray-500" />
@@ -70,7 +84,7 @@ const Bloque4 = ({
 
           <div className="flex justify-center mt-6">
             <button
-              onClick={handleExport}
+              onClick={handleGeneratePDF}
               className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-6 py-2 rounded-lg shadow"
             >
               <Download className="w-4 h-4" />
