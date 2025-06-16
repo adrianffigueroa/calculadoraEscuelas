@@ -9,8 +9,6 @@ import {
   DollarSign,
   Download,
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 
 const Bloque4 = ({
   provincia,
@@ -20,26 +18,6 @@ const Bloque4 = ({
   presupuestoTotal,
   costoTotal,
 }) => {
-  const handleGeneratePDF = async () => {
-    const input = document.getElementById('bloque4-pdf');
-
-    if (!input) {
-      console.error('No se encontró el elemento para generar el PDF');
-      return;
-    }
-
-    const canvas = await html2canvas(input, { scale: 2 });
-    const imgData = canvas.toDataURL('image/png');
-
-    const pdf = new jsPDF('p', 'mm', 'a4');
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save('ficha_sintesis_programa.pdf');
-  };
-
   return (
     <section className="flex justify-center">
       <Card className="w-7/8 text-start my-4">
@@ -80,16 +58,6 @@ const Bloque4 = ({
               <DollarSign className="w-4 h-4 text-gray-500" />
               Costo Total: <span className="font-medium">${costoTotal.toLocaleString()}</span>
             </p>
-          </div>
-
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={handleGeneratePDF}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-6 py-2 rounded-lg shadow"
-            >
-              <Download className="w-4 h-4" />
-              Generar PDF
-            </button>
           </div>
         </CardContent>
       </Card>

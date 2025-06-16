@@ -47,7 +47,7 @@ const Bloque1 = ({ provincia, setProvincia, departamentos, setDepartamentos }) =
   const opcionesDepartamentos = getDepartamentosPorProvincia(provincia);
 
   return (
-    <section className="flex justify-center">
+    <section className="flex justify-center mb-10">
       <Card className="w-7/8 text-center my-4">
         <CardHeader>
           <CardTitle>

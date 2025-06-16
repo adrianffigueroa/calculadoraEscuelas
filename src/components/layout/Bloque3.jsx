@@ -1,7 +1,16 @@
-import React from 'react';
-import { ResponsiveBar } from '@nivo/bar';
+import React, { useRef } from 'react';
 import { WalletMinimalIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../ui/card';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 const Bloque3 = ({
   presupuestoProvincial,
   setPresupuestoProvincial,
@@ -9,6 +18,7 @@ const Bloque3 = ({
   setPresupuestoNacional,
   presupuestoInternacional,
   setPresupuestoInternacional,
+  barChartRef,
 }) => {
   const total = presupuestoProvincial + presupuestoNacional + presupuestoInternacional;
   const data = [
@@ -21,7 +31,7 @@ const Bloque3 = ({
   ];
   const colors = { Provincial: '#60A5FA', Nacional: '#FDE68A', Internacional: '#FDA4AF' };
   return (
-    <section className="flex justify-center">
+    <section className="flex justify-center mb-10">
       <Card className="w-7/8 text-center my-4 h-130">
         <CardHeader>
           <CardTitle>
@@ -87,43 +97,28 @@ const Bloque3 = ({
               <div className="bg-blue-200 rounded-md text-center py-1 font-semibold mb-2">
                 Presupuesto según origen
               </div>
-              <ResponsiveBar
-                data={data}
-                keys={['Provincial', 'Nacional', 'Internacional']}
-                indexBy="origen"
-                margin={{ top: 10, right: 30, bottom: 50, left: 50 }}
-                padding={0.5}
-                layout="vertical"
-                valueScale={{ type: 'linear' }}
-                indexScale={{ type: 'band', round: true }}
-                colors={({ id }) => colors[id]}
-                borderRadius={2}
-                enableLabel={true}
-                labelSkipHeight={12}
-                labelTextColor="#000"
-                axisBottom={{
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legendPosition: 'middle',
-                  legendOffset: 32,
-                }}
-                axisLeft={null}
-                legends={[
-                  {
-                    dataFrom: 'keys',
-                    anchor: 'bottom',
-                    direction: 'row',
-                    justify: false,
-                    translateY: 50,
-                    itemsSpacing: 8,
-                    itemWidth: 80,
-                    itemHeight: 20,
-                    itemTextColor: '#000',
-                    symbolSize: 15,
-                    symbolShape: 'circle',
-                  },
-                ]}
-              />
+              <div ref={barChartRef} style={{ width: '100%', height: '300px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={data}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="origen" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="Provincial" stackId="a" fill={colors.Provincial} />
+                    <Bar dataKey="Nacional" stackId="a" fill={colors.Nacional} />
+                    <Bar dataKey="Internacional" stackId="a" fill={colors.Internacional} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </CardHeader>

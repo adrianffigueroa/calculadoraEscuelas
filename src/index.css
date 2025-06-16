@@ -75,6 +75,22 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
+.modo-exportacion * {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #fff !important; /* o #e5e7eb si querés que se vean sutiles */
+}
+
+.modo-exportacion input,
+.modo-exportacion select,
+.modo-exportacion textarea {
+  border: 1px solid #e5e7eb !important; /* opcional: bordes más limpios */
+}
+
+.modo-exportacion [role='tooltip'],
+.modo-exportacion [data-radix-popper-content-wrapper] {
+  display: none !important;
+}
 
 .dark {
   --background: oklch(0.145 0 0);

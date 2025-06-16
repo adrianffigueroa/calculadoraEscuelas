@@ -41,7 +41,12 @@ export default function useCostosUnitarios() {
             costosMap[normalizedName] = costo;
           }
         });
-
+        // 🧪 Log de claves relevantes (opcional)
+        Object.keys(costosMap).forEach((key) => {
+          if (key.includes('cuadernillos')) {
+            console.log('🔍 Costo registrado para:', `"${key}" → $${costosMap[key]}"`);
+          }
+        });
         setCostosUnitarios(costosMap);
         setLoading(false);
       })

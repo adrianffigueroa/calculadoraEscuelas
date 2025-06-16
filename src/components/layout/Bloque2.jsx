@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { HandCoinsIcon } from 'lucide-react';
 import GastosVariablesAccordion from '../ui/GastosVariablesAccordion';
@@ -25,6 +25,7 @@ const Bloque2 = ({
   const { costosAjustados } = useCostosAjustados();
   const { costosUnitarios, loading } = useCostosUnitarios();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const pieChartsRef = useRef();
 
   // 🧮 Total por categoría - Fijos
   const totalPorCategoriaFijos = useMemo(() => {
@@ -96,8 +97,8 @@ const Bloque2 = ({
   };
 
   return (
-    <section className="flex justify-center">
-      <Card className="w-7/8 text-center my-4 overflow-y-auto">
+    <section className="flex justify-center mb-10">
+      <Card className="w-7/8 text-center my-4 h-full">
         <CardHeader>
           <CardTitle>
             <div className="bg-gray-100 text-2xl flex justify-start items-center gap-1 p-2 rounded-md">
@@ -107,7 +108,7 @@ const Bloque2 = ({
           </CardTitle>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="h-280">
           <div className="grid grid-cols-3 gap-8 p-4 text-start">
             {/* Columna 1: Gastos Fijos */}
             <div>
@@ -147,7 +148,7 @@ const Bloque2 = ({
           </div>
 
           {/* 🎯 PieCharts */}
-          <div className="flex justify-center gap-4 mt-10">
+          <div ref={pieChartsRef} className="flex justify-center gap-4 mt-10">
             <SimplePieChart data={totalPorCategoriaFijos} title="Distribución Gastos Fijos" />
             <SimplePieChart
               data={totalPorCategoriaVariables}
