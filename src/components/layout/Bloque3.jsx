@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { WalletMinimalIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../ui/card';
 import {
@@ -11,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+
 const Bloque3 = ({
   presupuestoProvincial,
   setPresupuestoProvincial,
@@ -18,6 +19,7 @@ const Bloque3 = ({
   setPresupuestoNacional,
   presupuestoInternacional,
   setPresupuestoInternacional,
+  costoTotalGeneral,
   barChartRef,
 }) => {
   const total = presupuestoProvincial + presupuestoNacional + presupuestoInternacional;
@@ -30,6 +32,16 @@ const Bloque3 = ({
     },
   ];
   const colors = { Provincial: '#60A5FA', Nacional: '#FDE68A', Internacional: '#FDA4AF' };
+
+  const handleFocus = (e) => {
+    if (e.target.value === '0') e.target.value = '';
+  };
+
+  const handleBlur = (setter, value) => (e) => {
+    const val = e.target.value.trim();
+    setter(val === '' ? 0 : Number(val));
+  };
+
   return (
     <section className="flex justify-center mb-10">
       <Card className="w-7/8 text-center my-4 h-130">
@@ -50,7 +62,9 @@ const Bloque3 = ({
                 type="number"
                 value={presupuestoProvincial}
                 onChange={(e) => setPresupuestoProvincial(Number(e.target.value))}
-                className="w-full rounded-md border p-2"
+                onFocus={handleFocus}
+                onBlur={handleBlur(setPresupuestoProvincial, presupuestoProvincial)}
+                className="w-full rounded-md border p-2 appearance-none"
               />
 
               <h2 className="text-xl font-semibold">Presupuesto Nacional</h2>
@@ -58,7 +72,9 @@ const Bloque3 = ({
                 type="number"
                 value={presupuestoNacional}
                 onChange={(e) => setPresupuestoNacional(Number(e.target.value))}
-                className="w-full rounded-md border p-2"
+                onFocus={handleFocus}
+                onBlur={handleBlur(setPresupuestoNacional, presupuestoNacional)}
+                className="w-full rounded-md border p-2 appearance-none"
               />
 
               <h2 className="text-xl font-semibold">Presupuesto Internacional</h2>
@@ -66,7 +82,9 @@ const Bloque3 = ({
                 type="number"
                 value={presupuestoInternacional}
                 onChange={(e) => setPresupuestoInternacional(Number(e.target.value))}
-                className="w-full rounded-md border p-2"
+                onFocus={handleFocus}
+                onBlur={handleBlur(setPresupuestoInternacional, presupuestoInternacional)}
+                className="w-full rounded-md border p-2 appearance-none"
               />
             </div>
 
@@ -87,9 +105,9 @@ const Bloque3 = ({
               </p>
 
               <hr className="my-2" />
-              <p>Costo Total: $0</p>
+              <p>Costo Total: ${costoTotalGeneral.toFixed(0)}</p>
               <p>Presupuesto Total: ${total}</p>
-              <p>Balance: ${total}</p>
+              <p>Balance: ${total - costoTotalGeneral}</p>
             </div>
 
             {/* Columna 3: Gráfico */}

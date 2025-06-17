@@ -34,6 +34,7 @@ function App() {
   const { cantidadDocentes, cantidadEscuelas } = useEscuelasFiltradas(departamentos);
   const [escuelasObjetivo, setEscuelasObjetivo] = useState(cantidadEscuelas);
   const [docentesObjetivo, setDocentesObjetivo] = useState(cantidadDocentes);
+  const [costoTotalGeneral, setCostoTotalGeneral] = useState(0);
   const calcularTotalCostos = () => {
     const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
     const sumGrupo = (grupo) =>
@@ -132,6 +133,8 @@ function App() {
             setGastosVariables={setGastosVariables}
             costosExtras={costosExtras}
             setCostosExtras={setCostosExtras}
+            costoTotalGeneral={costoTotalGeneral}
+            setCostoTotalGeneral={setCostoTotalGeneral}
           />
         </div>
       </div>
@@ -144,6 +147,7 @@ function App() {
             setPresupuestoNacional={setPresupuestoNacional}
             presupuestoInternacional={presupuestoInternacional}
             setPresupuestoInternacional={setPresupuestoInternacional}
+            costoTotalGeneral={costoTotalGeneral}
             barChartRef={barChartRef}
           />
         </div>

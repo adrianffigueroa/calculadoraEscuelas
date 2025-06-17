@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Card } from './card';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
 import useCostosUnitarios from '@/hooks/useCostosUnitarios';
@@ -12,6 +12,8 @@ const ResumenDeCostos = ({
   costosUnitarios,
   cantidadDocentes,
   cantidadEscuelas,
+  costoTotalGeneral,
+  setCostoTotalGeneral,
 }) => {
   const { costosAjustados } = useCostosAjustados();
 
@@ -47,7 +49,10 @@ const ResumenDeCostos = ({
   }, [costosExtras]);
 
   // 🧮 Costo Total General
-  const costoTotalGeneral = totalFijos + totalVariables + totalExtras;
+  useEffect(() => {
+    setCostoTotalGeneral(totalFijos + totalVariables + totalExtras);
+  }),
+    [totalFijos, totalVariables, totalExtras];
 
   return (
     <Card className="p-4 text-left">

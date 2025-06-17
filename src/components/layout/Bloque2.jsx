@@ -21,6 +21,8 @@ const Bloque2 = ({
   setGastosVariables,
   costosExtras,
   setCostosExtras,
+  costoTotalGeneral,
+  setCostoTotalGeneral,
 }) => {
   const { costosAjustados } = useCostosAjustados();
   const { costosUnitarios, loading } = useCostosUnitarios();
@@ -134,6 +136,8 @@ const Bloque2 = ({
                 costosUnitarios={costosUnitarios}
                 cantidadDocentes={cantidadDocentes}
                 cantidadEscuelas={cantidadEscuelas}
+                costoTotalGeneral={costoTotalGeneral}
+                setCostoTotalGeneral={setCostoTotalGeneral}
               />
               <div className="mt-6">
                 <button
