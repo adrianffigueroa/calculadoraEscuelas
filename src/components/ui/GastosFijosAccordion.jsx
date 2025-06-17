@@ -10,10 +10,10 @@ import useCostosUnitarios from '@/hooks/useCostosUnitarios';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
 import ModalAgregarCostoExtra from './ModalAgregarCostoExtra';
 import { useState } from 'react';
+import CantidadInput from '../CantidadInput';
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-// 👇 función para normalizar nombres (igual que en el hook)
 const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
 
 const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos }) => {
@@ -27,10 +27,8 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
     setExtrasFijos((prev) => {
       const exists = prev.find((e) => e.id === extra.id);
       if (exists) {
-        // Update
         return prev.map((e) => (e.id === extra.id ? extra : e));
       }
-      // Add new
       return [...prev, extra];
     });
   };
@@ -101,9 +99,7 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
     );
   };
 
-  const calcularCostoTotal = (cantidad, costoUnitario) => {
-    return cantidad * costoUnitario;
-  };
+  const calcularCostoTotal = (cantidad, costoUnitario) => cantidad * costoUnitario;
 
   return (
     <>
@@ -123,7 +119,6 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {/* Subitems fijos */}
                     {grupo.subitems.map((subitem) => {
                       const normalizedName = normalizeName(subitem.name);
                       const costoUnitario =
@@ -132,14 +127,10 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
                         <tr key={subitem.id}>
                           <td className="px-4 py-2 text-gray-800">{subitem.name}</td>
                           <td className="px-4 py-2">
-                            <input
-                              type="number"
-                              min="0"
+                            <CantidadInput
                               className="border rounded px-2 py-1 w-20"
                               value={subitem.cantidad}
-                              onChange={(e) =>
-                                handleCantidadChange(index, subitem.id, e.target.value)
-                              }
+                              onChange={(val) => handleCantidadChange(index, subitem.id, val)}
                             />
                           </td>
                           <td className="px-4 py-2">$ {costoUnitario.toFixed(2)}</td>
@@ -150,38 +141,29 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
                       );
                     })}
 
-                    {/* Subitems extras */}
                     {grupo.extras.map((extra) => (
                       <tr key={extra.id}>
                         <td className="px-4 py-2">
-                          <input
-                            type="text"
+                          <CantidadInput
                             className="border rounded px-2 py-1 w-full"
                             value={extra.name}
-                            placeholder="Nombre del extra"
-                            onChange={(e) => handleExtraNameChange(index, extra.id, e.target.value)}
+                            onChange={(val) => handleExtraNameChange(index, extra.id, val)}
                           />
                         </td>
                         <td className="px-4 py-2">
-                          <input
-                            type="number"
-                            min="0"
+                          <CantidadInput
                             className="border rounded px-2 py-1 w-20"
                             value={extra.cantidad}
-                            onChange={(e) =>
-                              handleCantidadChange(index, extra.id, e.target.value, true)
-                            }
+                            onChange={(val) => handleCantidadChange(index, extra.id, val, true)}
                           />
                         </td>
                         <td className="px-4 py-2">
-                          <input
-                            type="number"
-                            min="0"
+                          <CantidadInput
                             step="0.01"
                             className="border rounded px-2 py-1 w-24"
                             value={extra.costoUnitario}
-                            onChange={(e) =>
-                              handleCostoUnitarioChange(index, extra.id, e.target.value, true)
+                            onChange={(val) =>
+                              handleCostoUnitarioChange(index, extra.id, val, true)
                             }
                           />
                         </td>
@@ -203,6 +185,7 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
             </AccordionContent>
           </AccordionItem>
         ))}
+
         <AccordionItem value="extras">
           <AccordionTrigger className="text-lg font-medium">Costos Extras</AccordionTrigger>
           <AccordionContent>
@@ -260,6 +243,7 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
       <Button
         className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow"
         onClick={() => {

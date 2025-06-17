@@ -10,6 +10,7 @@ import ModalAgregarCostoExtra from './ModalAgregarCostoExtra';
 import useCostosUnitarios from '@/hooks/useCostosUnitarios';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
 import { initialGastosVariables } from '@/data/initialGastos';
+import CantidadInput from '../CantidadInput';
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
@@ -91,15 +92,12 @@ const GastosVariablesAccordion = ({
     return cantidad * costoUnitario;
   };
 
-  // 👉 HANDLERS para el modal de Costos Extras:
   const handleSaveExtra = (extra) => {
     setExtrasVariables((prev) => {
       const exists = prev.find((e) => e.id === extra.id);
       if (exists) {
-        // Update
         return prev.map((e) => (e.id === extra.id ? extra : e));
       }
-      // Add new
       return [...prev, extra];
     });
   };
@@ -126,24 +124,18 @@ const GastosVariablesAccordion = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {/* Subitems fijos */}
                     {grupo.subitems.map((subitem) => {
                       const normalizedName = normalizeName(subitem.name);
                       const costoUnitario =
                         costosAjustados[normalizedName] ?? costosUnitarios[normalizedName] ?? 0;
-
                       return (
                         <tr key={subitem.id}>
                           <td className="px-4 py-2 text-gray-800">{subitem.name}</td>
                           <td className="px-4 py-2">
-                            <input
-                              type="number"
-                              min="0"
+                            <CantidadInput
                               className="border rounded px-2 py-1 w-20"
                               value={subitem.cantidad}
-                              onChange={(e) =>
-                                handleCantidadChange(index, subitem.id, e.target.value)
-                              }
+                              onChange={(e) => handleCantidadChange(index, subitem.id, e)}
                             />
                           </td>
                           <td className="px-4 py-2">$ {costoUnitario.toFixed(2)}</td>
@@ -160,7 +152,6 @@ const GastosVariablesAccordion = ({
           </AccordionItem>
         ))}
 
-        {/* 👉 Costos Extras */}
         <AccordionItem value="extras">
           <AccordionTrigger className="text-lg font-medium">Costos Extras</AccordionTrigger>
           <AccordionContent>
@@ -219,7 +210,6 @@ const GastosVariablesAccordion = ({
         </AccordionItem>
       </Accordion>
 
-      {/* 👉 Botón debajo del Accordion */}
       <Button
         className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow"
         onClick={() => {
@@ -230,7 +220,6 @@ const GastosVariablesAccordion = ({
         + Agregar Costo Extra
       </Button>
 
-      {/* Modal */}
       <ModalAgregarCostoExtra
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}

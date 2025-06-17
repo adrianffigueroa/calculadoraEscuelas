@@ -98,7 +98,7 @@ const Bloque2 = ({
 
   return (
     <section className="flex justify-center mb-10">
-      <Card className="w-7/8 text-center my-4 h-full">
+      <Card className="w-7/8 text-center my-4 h-full overflow-y-auto">
         <CardHeader>
           <CardTitle>
             <div className="bg-gray-100 text-2xl flex justify-start items-center gap-1 p-2 rounded-md">

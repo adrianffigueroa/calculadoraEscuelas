@@ -21,15 +21,21 @@ import { Button } from '../ui/button';
 import MultiSelect from '../MultiSelect';
 import CustomSlider from '../ui/CustomSlider';
 import useEscuelasFiltradas from '@/hooks/useEscuelasFiltradas';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getDepartamentosPorProvincia } from '@/utils/getDepartamentosPorProvincia';
 
-const Bloque1 = ({ provincia, setProvincia, departamentos, setDepartamentos }) => {
+const Bloque1 = ({
+  provincia,
+  setProvincia,
+  departamentos,
+  setDepartamentos,
+  escuelasObjetivo,
+  setEscuelasObjetivo,
+  docentesObjetivo,
+  setDocentesObjetivo,
+}) => {
   const { escuelasFiltradas, cantidadEscuelas, cantidadDocentes, loading } =
     useEscuelasFiltradas(departamentos);
-
-  const [escuelasObjetivo, setEscuelasObjetivo] = useState(cantidadEscuelas);
-  const [docentesObjetivo, setDocentesObjetivo] = useState(cantidadDocentes);
 
   useEffect(() => {
     setEscuelasObjetivo(cantidadEscuelas);
@@ -110,12 +116,12 @@ const Bloque1 = ({ provincia, setProvincia, departamentos, setDepartamentos }) =
 
                 <Card className="w-3/5 p-4 text-center flex justify-between transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
                   <p>Total Escuelas</p>
-                  <span className="font-semibold text-blue-700">{cantidadEscuelas}</span>
+                  <span className="font-semibold text-blue-700">{escuelasObjetivo}</span>
                 </Card>
 
                 <Card className="w-3/5 p-4 text-center flex justify-between transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
                   <p>Total Docentes</p>
-                  <span className="font-semibold text-blue-700">{cantidadDocentes}</span>
+                  <span className="font-semibold text-blue-700">{docentesObjetivo}</span>
                 </Card>
               </div>
               <div className="space-y-6 px-6 pb-6 w-1/2">

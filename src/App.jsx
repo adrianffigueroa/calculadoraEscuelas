@@ -32,7 +32,8 @@ function App() {
   const [costosExtras, setCostosExtras] = useState([]);
 
   const { cantidadDocentes, cantidadEscuelas } = useEscuelasFiltradas(departamentos);
-
+  const [escuelasObjetivo, setEscuelasObjetivo] = useState(cantidadEscuelas);
+  const [docentesObjetivo, setDocentesObjetivo] = useState(cantidadDocentes);
   const calcularTotalCostos = () => {
     const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
     const sumGrupo = (grupo) =>
@@ -114,12 +115,16 @@ function App() {
             setProvincia={setProvincia}
             departamentos={departamentos}
             setDepartamentos={setDepartamentos}
+            escuelasObjetivo={escuelasObjetivo}
+            setEscuelasObjetivo={setEscuelasObjetivo}
+            docentesObjetivo={docentesObjetivo}
+            setDocentesObjetivo={setDocentesObjetivo}
           />
         </div>
         <div ref={bloque2Ref}>
           <Bloque2
-            cantidadDocentes={cantidadDocentes}
-            cantidadEscuelas={cantidadEscuelas}
+            cantidadDocentes={docentesObjetivo}
+            cantidadEscuelas={escuelasObjetivo}
             departamentos={departamentos}
             gastosFijos={gastosFijos}
             setGastosFijos={setGastosFijos}
@@ -146,8 +151,8 @@ function App() {
           <Bloque4
             provincia={provincia}
             departamentos={departamentos}
-            cantidadEscuelas={cantidadEscuelas}
-            cantidadDocentes={cantidadDocentes}
+            cantidadEscuelas={escuelasObjetivo}
+            cantidadDocentes={docentesObjetivo}
             presupuestoTotal={totalPresupuesto}
             costoTotal={totalCostos}
             pieChartRef={pieChartRef}
