@@ -1,4 +1,6 @@
 import { GraduationCap } from 'lucide-react';
+import Imagen1 from '../assets/Imagen1.png';
+import Imagen2 from '../assets/Imagen2.png';
 
 const NavBar = () => {
   return (
@@ -11,8 +13,8 @@ const NavBar = () => {
       </div>
 
       <div className="flex space-x-8">
-        <img src="../src/assets/Imagen1.png" alt="logo1" className="w-30" />
-        <img src="../src/assets/Imagen2.png" alt="logo2" className="w-30" />
+        <img src={Imagen1} alt="logo1" className="w-30" />
+        <img src={Imagen2} alt="logo2" className="w-30" />
       </div>
     </nav>
   );
