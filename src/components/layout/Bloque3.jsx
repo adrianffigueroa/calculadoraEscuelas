@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { WalletMinimalIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../ui/card';
 import {
@@ -11,6 +11,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { GradientButton } from '../ui/GradientButton';
+import ModalAgregarFinanciamiento from '../ui/ModalAgregarFianciamiento';
+import { Button } from '../ui/button';
+import { parse } from 'papaparse';
 
 const Bloque3 = ({
   presupuestoProvincial,
@@ -22,16 +26,33 @@ const Bloque3 = ({
   costoTotalGeneral,
   barChartRef,
 }) => {
-  const total = presupuestoProvincial + presupuestoNacional + presupuestoInternacional;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hideFinanciamiento, setHideFinanciamiento] = useState(true);
+  const [financiamientoExtra, setFinanciamientoExtra] = useState([]);
+  const total =
+    presupuestoProvincial +
+    presupuestoNacional +
+    presupuestoInternacional +
+    parseFloat(
+      financiamientoExtra?.reduce((acc, item) => parseFloat(acc) + parseFloat(item.monto), 0)
+    );
   const data = [
     {
       origen: 'Presupuesto',
       Provincial: presupuestoProvincial,
       Nacional: presupuestoNacional,
       Internacional: presupuestoInternacional,
+      Extra: parseFloat(
+        financiamientoExtra.reduce((acc, item) => parseFloat(acc) + parseFloat(item.monto), 0)
+      ),
     },
   ];
-  const colors = { Provincial: '#60A5FA', Nacional: '#FDE68A', Internacional: '#FDA4AF' };
+  const colors = {
+    Provincial: '#60A5FA',
+    Nacional: '#FDE68A',
+    Internacional: '#FDA4AF',
+    Extra: '#a3de6d',
+  };
 
   const handleFocus = (e) => {
     if (e.target.value === '0') e.target.value = '';
@@ -42,9 +63,13 @@ const Bloque3 = ({
     setter(val === '' ? 0 : Number(val));
   };
 
+  const handleDelete = (id) => {
+    setFinanciamientoExtra(financiamientoExtra.filter((item) => item.id !== id));
+  };
+
   return (
     <section className="flex justify-center mb-10">
-      <Card className="w-7/8 text-center my-4 h-130">
+      <Card className="w-13/14 text-center my-4 h-auto">
         <CardHeader>
           <CardTitle>
             <div className="bg-gray-100 text-2xl flex justify-start items-center gap-1 p-2 rounded-md">
@@ -54,7 +79,7 @@ const Bloque3 = ({
               Bloque 3: Presupuesto Disponible
             </div>
           </CardTitle>
-          <div className="w-5/6 grid grid-cols-3 gap-6 p-6">
+          <div className="w-5/6 grid grid-cols-[1fr_1fr_2fr] gap-6 p-6">
             {/* Columna 1: Inputs */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Presupuesto Provincial</h2>
@@ -86,6 +111,41 @@ const Bloque3 = ({
                 onBlur={handleBlur(setPresupuestoInternacional, presupuestoInternacional)}
                 className="w-full rounded-md border p-2 appearance-none"
               />
+              {financiamientoExtra.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold">Presupuesto Extra</h2>
+                  {financiamientoExtra.map((financiamiento, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center border p-2 rounded-md"
+                    >
+                      <div className="flex flex-col items-start">
+                        <p>
+                          <span className="font-semibold"> Nombre:</span> {financiamiento.nombre}
+                        </p>
+                        <p>
+                          {' '}
+                          <span className="font-semibold"> Monto: $</span> {financiamiento.monto}
+                        </p>
+                      </div>
+                      <div>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDelete(financiamiento.id)}
+                          className="cursor-pointer"
+                        >
+                          Eliminar
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              <GradientButton onClick={() => setIsModalOpen(true)}>
+                + Agregar Financiamiento
+              </GradientButton>
             </div>
 
             {/* Columna 2: Resumen */}
@@ -102,6 +162,35 @@ const Bloque3 = ({
               <p>
                 Internacional: ${presupuestoInternacional} (
                 {total > 0 ? ((presupuestoInternacional / total) * 100).toFixed(0) + '%' : '0%'})
+              </p>
+              <p>
+                {financiamientoExtra.length > 0 && (
+                  <>
+                    <span>
+                      Extra: $
+                      {parseFloat(
+                        financiamientoExtra.reduce(
+                          (total, item) => parseFloat(total) + parseFloat(item.monto),
+                          0
+                        )
+                      )}
+                    </span>{' '}
+                    (
+                    {total > 0
+                      ? (
+                          (parseFloat(
+                            financiamientoExtra.reduce(
+                              (total, item) => parseFloat(total) + parseFloat(item.monto),
+                              0
+                            )
+                          ) /
+                            total) *
+                          100
+                        ).toFixed(0) + '%'
+                      : '0%'}
+                    )
+                  </>
+                )}
               </p>
 
               <hr className="my-2" />
@@ -134,6 +223,7 @@ const Bloque3 = ({
                     <Bar dataKey="Provincial" stackId="a" fill={colors.Provincial} />
                     <Bar dataKey="Nacional" stackId="a" fill={colors.Nacional} />
                     <Bar dataKey="Internacional" stackId="a" fill={colors.Internacional} />
+                    <Bar dataKey="Extra" stackId="a" fill={colors.Extra} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -141,6 +231,14 @@ const Bloque3 = ({
           </div>
         </CardHeader>
       </Card>
+      <ModalAgregarFinanciamiento
+        hideFinanciamiento={hideFinanciamiento}
+        setHideFinanciamiento={setHideFinanciamiento}
+        financiamientoExtra={financiamientoExtra}
+        setFinanciamientoExtra={setFinanciamientoExtra}
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </section>
   );
 };

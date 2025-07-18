@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Bloque1 from './components/layout/Bloque1';
 import Bloque2 from './components/layout/Bloque2';
 import Bloque3 from './components/layout/Bloque3';
@@ -10,6 +10,7 @@ import { initialGastosFijos, initialGastosVariables } from '@/data/initialGastos
 import useCostosUnitarios from '@/hooks/useCostosUnitarios';
 import jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image-more';
+import { GradientButton } from './components/ui/GradientButton';
 
 function App() {
   const bloque1Ref = useRef();
@@ -27,18 +28,20 @@ function App() {
   const [presupuestoProvincial, setPresupuestoProvincial] = useState(0);
   const [presupuestoNacional, setPresupuestoNacional] = useState(0);
   const [presupuestoInternacional, setPresupuestoInternacional] = useState(0);
-  const [gastosFijos, setGastosFijos] = useState(initialGastosFijos);
-  const [gastosVariables, setGastosVariables] = useState(initialGastosVariables);
+  const [gastosFijos, setGastosFijos] = useState(initialGastosFijos(false));
+  const [gastosVariables, setGastosVariables] = useState(initialGastosVariables(false));
   const [costosExtras, setCostosExtras] = useState([]);
 
   const { cantidadDocentes, cantidadEscuelas } = useEscuelasFiltradas(departamentos);
+  const [diasObjetivo, setDiasObjetivo] = useState(0);
   const [escuelasObjetivo, setEscuelasObjetivo] = useState(cantidadEscuelas);
   const [docentesObjetivo, setDocentesObjetivo] = useState(cantidadDocentes);
+  const [docentesRurales, setDocentesRurales] = useState(0);
   const [costoTotalGeneral, setCostoTotalGeneral] = useState(0);
   const calcularTotalCostos = () => {
     const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
     const sumGrupo = (grupo) =>
-      grupo.reduce((acc, item) => {
+      grupo?.reduce((acc, item) => {
         const subitemsTotal = item.subitems.reduce((sum, s) => {
           const normalizedName = normalizeName(s.name);
           const costoUnitario = costosUnitarios[normalizedName] || 0;
@@ -68,7 +71,6 @@ function App() {
 
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
 
     try {
       const refs = [pagina1Ref, pagina2Ref];
@@ -106,6 +108,12 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const hayDepartamentos = Array.isArray(departamentos) && departamentos.length > 0;
+    setGastosFijos(initialGastosFijos(hayDepartamentos));
+    setGastosVariables(initialGastosVariables(hayDepartamentos));
+  }, [departamentos]);
+
   return (
     <>
       <NavBar />
@@ -120,6 +128,10 @@ function App() {
             setEscuelasObjetivo={setEscuelasObjetivo}
             docentesObjetivo={docentesObjetivo}
             setDocentesObjetivo={setDocentesObjetivo}
+            diasObjetivo={diasObjetivo}
+            setDiasObjetivo={setDiasObjetivo}
+            docentesRurales={docentesRurales}
+            setDocentesRurales={setDocentesRurales}
           />
         </div>
         <div ref={bloque2Ref}>
@@ -135,6 +147,11 @@ function App() {
             setCostosExtras={setCostosExtras}
             costoTotalGeneral={costoTotalGeneral}
             setCostoTotalGeneral={setCostoTotalGeneral}
+            docentesObjetivo={docentesObjetivo}
+            setDocentesObjetivo={setDocentesObjetivo}
+            diasObjetivo={diasObjetivo}
+            setDiasObjetivo={setDiasObjetivo}
+            docentesRurales={docentesRurales}
           />
         </div>
       </div>
@@ -165,21 +182,18 @@ function App() {
       </div>
       <ModalBienvenida />
       <div className="flex justify-center my-6">
-        <button
-          onClick={handleGeneratePDF}
-          className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 flex items-center gap-2"
-        >
+        <GradientButton onClick={handleGeneratePDF} className="w-80 h-16 text-xl flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-8 w-8"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 4v16m8-8H4" />
           </svg>
-          Generar PDF completo
-        </button>
+          GENERAR PDF COMPLETO
+        </GradientButton>
       </div>
     </>
   );

@@ -20,7 +20,7 @@ const Bloque4 = ({
 }) => {
   return (
     <section className="flex justify-center">
-      <Card className="w-7/8 text-start my-4">
+      <Card className="w-13/14 text-start my-4">
         <CardHeader>
           <CardTitle>
             <div className="bg-gray-100 text-2xl flex items-center gap-2 p-2 rounded-md">
@@ -43,7 +43,7 @@ const Bloque4 = ({
             </p>
             <p className="flex items-center gap-2 mb-1">
               <School className="w-4 h-4 text-gray-500" />
-              Escuelas: <span className="font-medium">{cantidadEscuelas}</span>
+              Unidades Educativas: <span className="font-medium">{cantidadEscuelas}</span>
             </p>
             <p className="flex items-center gap-2 mb-1">
               <UsersRound className="w-4 h-4 text-gray-500" />

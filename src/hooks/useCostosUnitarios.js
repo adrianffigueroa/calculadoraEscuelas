@@ -32,19 +32,13 @@ export default function useCostosUnitarios() {
                   costoUnitarioRaw
                     .toString()
                     .replace(/[$\s]/g, '') // elimina $ y espacios
-                    .replace(',', '.')
+                    .replace(/,/g, '') // reemplaza comas por puntos
                 ) || 0;
             }
 
             const normalizedName = normalizeName(name);
 
             costosMap[normalizedName] = costo;
-          }
-        });
-        // 🧪 Log de claves relevantes (opcional)
-        Object.keys(costosMap).forEach((key) => {
-          if (key.includes('cuadernillos')) {
-            console.log('🔍 Costo registrado para:', `"${key}" → $${costosMap[key]}"`);
           }
         });
         setCostosUnitarios(costosMap);

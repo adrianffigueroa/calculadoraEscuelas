@@ -19,7 +19,7 @@ const COLORS = [
 const SimplePieChart = ({ data, title }) => {
   return (
     <div className="flex flex-col items-center w-1/3">
-      <div className="text-center text-xl font-semibold mb-2 bg-gradient-to-r from-blue-500 to-blue-300 text-white rounded px-4 py-1">
+      <div className="text-center text-2xl font-semibold mb-2 bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] text-white rounded px-4 py-1">
         {title}
       </div>
       <ResponsiveContainer width="100%" height={300}>
@@ -34,7 +34,7 @@ const SimplePieChart = ({ data, title }) => {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {data?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>

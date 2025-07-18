@@ -8,6 +8,8 @@ import useCostosUnitarios from '@/hooks/useCostosUnitarios';
 import ModalAjusteCostos from '../ui/ModalAjusteCostos';
 import SimplePieChart from '../ui/SimplePieChart';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
+import { GradientButton } from '../ui/GradientButton';
+import { initialGastosFijos } from '@/data/initialGastos';
 
 const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
 
@@ -23,6 +25,14 @@ const Bloque2 = ({
   setCostosExtras,
   costoTotalGeneral,
   setCostoTotalGeneral,
+  diasObjetivo,
+  setDiasObjetivo,
+  escuelasObjetivo,
+  setEscuelasObjetivo,
+  docentesObjetivo,
+  setDocentesObjetivo,
+  docentesRurales,
+  setDocentesRurales,
 }) => {
   const { costosAjustados } = useCostosAjustados();
   const { costosUnitarios, loading } = useCostosUnitarios();
@@ -31,7 +41,7 @@ const Bloque2 = ({
 
   // 🧮 Total por categoría - Fijos
   const totalPorCategoriaFijos = useMemo(() => {
-    return gastosFijos.map((grupo) => {
+    return gastosFijos?.map((grupo) => {
       const totalGrupo = grupo.subitems.reduce((acc, subitem) => {
         const normalized = normalizeName(subitem.name);
         const costoUnitario = costosAjustados[normalized] ?? costosUnitarios[normalized] ?? 0;
@@ -55,7 +65,7 @@ const Bloque2 = ({
 
   // 🧮 Fijos vs Variables
   const fijosVsVariables = useMemo(() => {
-    const totalFijos = totalPorCategoriaFijos.reduce((acc, g) => acc + g.value, 0);
+    const totalFijos = totalPorCategoriaFijos?.reduce((acc, g) => acc + g.value, 0);
     const totalVariables = totalPorCategoriaVariables.reduce((acc, g) => acc + g.value, 0);
     return [
       { name: 'Fijos', value: totalFijos },
@@ -100,7 +110,7 @@ const Bloque2 = ({
 
   return (
     <section className="flex justify-center mb-10">
-      <Card className="w-7/8 text-center my-4 h-full overflow-y-auto">
+      <Card className="w-13/14 text-center my-4 h-full overflow-y-auto">
         <CardHeader>
           <CardTitle>
             <div className="bg-gray-100 text-2xl flex justify-start items-center gap-1 p-2 rounded-md">
@@ -111,7 +121,7 @@ const Bloque2 = ({
         </CardHeader>
 
         <CardContent className="h-280">
-          <div className="grid grid-cols-3 gap-8 p-4 text-start">
+          <div className="grid grid-cols-[2fr_2fr_1fr] gap-4 p-4 text-start">
             {/* Columna 1: Gastos Fijos */}
             <div>
               <h2 className="text-xl font-semibold mb-4">Gastos Fijos (cantidades)</h2>
@@ -124,6 +134,10 @@ const Bloque2 = ({
               <GastosVariablesAccordion
                 gastosVariables={gastosVariables}
                 setGastosVariables={setGastosVariables}
+                docentesObjetivo={docentesObjetivo}
+                departamentos={departamentos}
+                docentesRurales={docentesRurales}
+                diasObjetivo={diasObjetivo}
               />
             </div>
 
@@ -140,12 +154,9 @@ const Bloque2 = ({
                 setCostoTotalGeneral={setCostoTotalGeneral}
               />
               <div className="mt-6">
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="w-full rounded-md bg-gradient-to-r from-blue-500 to-blue-300 text-white py-2 font-semibold shadow"
-                >
+                <GradientButton onClick={() => setIsModalOpen(true)}>
                   AJUSTAR COSTOS UNITARIOS
-                </button>
+                </GradientButton>
               </div>
               <ModalAjusteCostos open={isModalOpen} onClose={() => setIsModalOpen(false)} />
             </div>

@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { categoriasCostosFijos, categoriasCostosVariables } from '@/data/categoriasCostos';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'; // o el modal que uses
+import { Dialog, DialogContent, DialogTitle, DialogClose } from '@/components/ui/dialog';
+import { GradientButton } from './GradientButton';
 
 const ModalAjusteCostos = ({ open, onClose }) => {
   const { setCostoAjustado } = useCostosAjustados();
@@ -32,9 +33,13 @@ const ModalAjusteCostos = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogTitle>Ajustar Costos Unitarios</DialogTitle>
-
+      <DialogContent className="[&>button:last-of-type]:hidden">
+        <div className="flex items-center space-x-2 justify-between">
+          <DialogTitle>Ajustar Costos Unitarios</DialogTitle>
+          <DialogClose asChild>
+            <GradientButton onClick={() => onClose()}>X</GradientButton>
+          </DialogClose>
+        </div>
         <div className="flex flex-col gap-4">
           {/* Selector tipo de costo */}
           <div>
@@ -108,21 +113,15 @@ const ModalAjusteCostos = ({ open, onClose }) => {
 
           {/* Botones */}
           <div className="flex justify-end gap-2 mt-4">
-            <button
-              onClick={handleReset}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              Cambiar otro costo
-            </button>
-            <button
+            <GradientButton onClick={handleReset}>Cambiar otro costo</GradientButton>
+            <GradientButton
               onClick={() => {
                 handleAjustar();
                 onClose();
               }}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Aceptar y cerrar
-            </button>
+            </GradientButton>
           </div>
         </div>
       </DialogContent>

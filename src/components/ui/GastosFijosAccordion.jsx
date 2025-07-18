@@ -5,7 +5,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { initialGastosFijos } from '@/data/initialGastos';
 import useCostosUnitarios from '@/hooks/useCostosUnitarios';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
 import ModalAgregarCostoExtra from './ModalAgregarCostoExtra';
@@ -16,11 +15,11 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 
 const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
 
-const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos }) => {
+const GastosFijosAccordion = ({ gastosFijos = [], setGastosFijos }) => {
   const [extrasFijos, setExtrasFijos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExtra, setEditingExtra] = useState(null);
-  const { costosUnitarios, loading } = useCostosUnitarios();
+  const { costosUnitarios } = useCostosUnitarios();
   const { costosAjustados } = useCostosAjustados();
 
   const handleSaveExtra = (extra) => {
@@ -106,16 +105,18 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
       <Accordion type="multiple" className="w-full space-y-2">
         {gastosFijos.map((grupo, index) => (
           <AccordionItem key={index} value={`item-${index}`}>
-            <AccordionTrigger className="text-lg font-medium">{grupo.item}</AccordionTrigger>
+            <AccordionTrigger className="ps-4 text-lg text-white font-bold bg-[linear-gradient(to_right,_rgb(44,61,87),_rgb(104,121,136))] hover:bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl/30 hover:cursor-pointer">
+              {grupo.item.toUpperCase()}
+            </AccordionTrigger>
             <AccordionContent>
               <div className="overflow-x-auto">
                 <table className="min-w-full text-left text-sm">
                   <thead>
                     <tr>
-                      <th className="px-4 py-2">Subítem</th>
-                      <th className="px-4 py-2">Cantidad</th>
-                      <th className="px-4 py-2">Costo Unitario</th>
-                      <th className="px-4 py-2">Costo Total</th>
+                      <th className="px-1 py-2">Subítem</th>
+                      <th className="px-1 py-2">Cantidad</th>
+                      <th className="px-1 py-2">Costo Unitario</th>
+                      <th className="px-1 py-2">Costo Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -125,16 +126,16 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
                         costosAjustados[normalizedName] ?? costosUnitarios[normalizedName] ?? 0;
                       return (
                         <tr key={subitem.id}>
-                          <td className="px-4 py-2 text-gray-800">{subitem.name}</td>
-                          <td className="px-4 py-2">
+                          <td className="px-1 py-2 text-gray-800">{subitem.name}</td>
+                          <td className="px-1 py-2">
                             <CantidadInput
                               className="border rounded px-2 py-1 w-20"
                               value={subitem.cantidad}
                               onChange={(val) => handleCantidadChange(index, subitem.id, val)}
                             />
                           </td>
-                          <td className="px-4 py-2">$ {costoUnitario.toFixed(2)}</td>
-                          <td className="px-4 py-2">
+                          <td className="px-1 py-2">$ {costoUnitario.toFixed(2)}</td>
+                          <td className="px-1 py-2">
                             $ {calcularCostoTotal(subitem.cantidad, costoUnitario).toFixed(2)}
                           </td>
                         </tr>
@@ -143,21 +144,21 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
 
                     {grupo.extras.map((extra) => (
                       <tr key={extra.id}>
-                        <td className="px-4 py-2">
+                        <td className="px-1 py-2">
                           <CantidadInput
                             className="border rounded px-2 py-1 w-full"
                             value={extra.name}
                             onChange={(val) => handleExtraNameChange(index, extra.id, val)}
                           />
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-1 py-2">
                           <CantidadInput
                             className="border rounded px-2 py-1 w-20"
                             value={extra.cantidad}
                             onChange={(val) => handleCantidadChange(index, extra.id, val, true)}
                           />
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-1 py-2">
                           <CantidadInput
                             step="0.01"
                             className="border rounded px-2 py-1 w-24"
@@ -167,7 +168,7 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
                             }
                           />
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-1 py-2">
                           $ {calcularCostoTotal(extra.cantidad, extra.costoUnitario).toFixed(2)}
                         </td>
                       </tr>
@@ -187,29 +188,31 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
         ))}
 
         <AccordionItem value="extras">
-          <AccordionTrigger className="text-lg font-medium">Costos Extras</AccordionTrigger>
+          <AccordionTrigger className="ps-4 text-lg text-white font-bold bg-[linear-gradient(to_right,_rgb(44,61,87),_rgb(104,121,136))] hover:bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl/30 hover:cursor-pointer">
+            Costos Extras
+          </AccordionTrigger>
           <AccordionContent>
             <div className="overflow-x-auto">
               <table className="min-w-full text-left text-sm">
                 <thead>
                   <tr>
-                    <th className="px-4 py-2">Nombre</th>
-                    <th className="px-4 py-2">Cantidad</th>
-                    <th className="px-4 py-2">Costo Unitario</th>
-                    <th className="px-4 py-2">Costo Total</th>
-                    <th className="px-4 py-2">Acciones</th>
+                    <th className="px-1 py-2">Nombre</th>
+                    <th className="px-1 py-2">Cantidad</th>
+                    <th className="px-1 py-2">Costo Unitario</th>
+                    <th className="px-1 py-2">Costo Total</th>
+                    <th className="px-1 py-2">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {extrasFijos.map((extra) => (
                     <tr key={extra.id}>
-                      <td className="px-4 py-2">{extra.name}</td>
-                      <td className="px-4 py-2">{extra.cantidad}</td>
-                      <td className="px-4 py-2">${extra.costoUnitario.toFixed(2)}</td>
-                      <td className="px-4 py-2">
+                      <td className="px-1 py-2">{extra.name}</td>
+                      <td className="px-1 py-2">{extra.cantidad}</td>
+                      <td className="px-1 py-2">${extra.costoUnitario.toFixed(2)}</td>
+                      <td className="px-1 py-2">
                         ${(extra.cantidad * extra.costoUnitario).toFixed(2)}
                       </td>
-                      <td className="px-4 py-2 space-x-2">
+                      <td className="px-1 py-2 space-x-2">
                         <Button
                           size="sm"
                           variant="secondary"
@@ -232,7 +235,7 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
                   ))}
                   {extrasFijos.length === 0 && (
                     <tr>
-                      <td colSpan="5" className="px-4 py-2 italic text-gray-500">
+                      <td colSpan="5" className="px-1 py-2 italic text-gray-500">
                         No hay costos extras.
                       </td>
                     </tr>
@@ -245,7 +248,7 @@ const GastosFijosAccordion = ({ gastosFijos = initialGastosFijos, setGastosFijos
       </Accordion>
 
       <Button
-        className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow"
+        className="mt-4 ps-4 text-lg text-white font-bold bg-[linear-gradient(to_right,_rgb(44,61,87),_rgb(104,121,136))] hover:bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl/30 hover:cursor-pointer"
         onClick={() => {
           setEditingExtra(null);
           setIsModalOpen(true);

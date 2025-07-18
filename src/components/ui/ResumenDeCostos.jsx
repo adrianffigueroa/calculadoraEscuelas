@@ -19,7 +19,7 @@ const ResumenDeCostos = ({
 
   // 🧮 Total Fijos
   const totalFijos = useMemo(() => {
-    return gastosFijos.reduce((accGrupo, grupo) => {
+    return gastosFijos?.reduce((accGrupo, grupo) => {
       const totalGrupo = grupo.subitems.reduce((acc, subitem) => {
         const normalized = normalizeName(subitem.name);
         const costoUnitario = costosAjustados[normalized] ?? costosUnitarios[normalized] ?? 0;
@@ -58,7 +58,7 @@ const ResumenDeCostos = ({
     <Card className="p-4 text-left">
       <h2 className="text-xl font-semibold mb-4">Resumen de Costos</h2>
       <p>
-        Total Fijos: <strong>${totalFijos.toFixed(2)}</strong>
+        Total Fijos: <strong>${totalFijos?.toFixed(2)}</strong>
       </p>
       <p>
         Total Variables: <strong>${totalVariables.toFixed(2)}</strong>

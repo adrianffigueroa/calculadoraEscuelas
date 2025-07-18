@@ -32,7 +32,7 @@ export default function MultiSelect({ value = [], onChange = () => {}, options =
       <PopoverTrigger asChild>
         <div
           role="button"
-          className="min-h-[44px] w-3/4 flex flex-1 items-center flex-wrap gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm"
+          className="min-h-[44px] w-3/4 flex flex-1 items-center justify-between flex-wrap gap-2 rounded-lg text-white bg-[linear-gradient(to_right,_rgb(44,61,87),_rgb(104,121,136))] hover:bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl/30 hover:cursor-pointer  text-sm font-bold tracking-wide shadow-md cursor-pointer "
         >
           {value.length > 0 ? (
             <div className="flex flex-wrap gap-2">
@@ -41,7 +41,7 @@ export default function MultiSelect({ value = [], onChange = () => {}, options =
                 return (
                   <span
                     key={val}
-                    className="flex items-center gap-1 rounded-full bg-violet-100 px-2 py-1 text-sm text-violet-500"
+                    className="flex items-center gap-1 rounded-full bg-transparent px-2 py-1 text-sm text-white"
                   >
                     {label}
                     <span
@@ -50,7 +50,7 @@ export default function MultiSelect({ value = [], onChange = () => {}, options =
                         e.stopPropagation();
                         removeValue(val);
                       }}
-                      className="ml-1 cursor-pointer text-violet-600 hover:text-violet-800"
+                      className="ml-1 cursor-pointer text-white "
                     >
                       <X className="h-4 w-4" />
                     </span>
@@ -59,7 +59,7 @@ export default function MultiSelect({ value = [], onChange = () => {}, options =
               })}
             </div>
           ) : (
-            <span className="text-muted-foreground">{label}</span>
+            <span className="text-white px-1">{label}</span>
           )}
         </div>
       </PopoverTrigger>

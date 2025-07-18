@@ -6,8 +6,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { GradientButton } from './GradientButton';
 import { Input } from '@/components/ui/input';
 
 const ModalAgregarCostoExtra = ({ open, onClose, onSave, initialData }) => {
@@ -41,10 +42,21 @@ const ModalAgregarCostoExtra = ({ open, onClose, onSave, initialData }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="[&>button:last-of-type]:hidden">
         <DialogHeader>
-          <DialogTitle>{initialData ? 'Editar Costo Extra' : 'Agregar Costo Extra'}</DialogTitle>
-          <DialogDescription>Complete los campos para el costo extra.</DialogDescription>
+          <div className="flex justify-between">
+            <div className="flex flex-col">
+              <DialogTitle>
+                {initialData ? 'Editar Costo Extra' : 'Agregar Costo Extra'}
+              </DialogTitle>
+              <DialogDescription>Complete los campos para el costo extra.</DialogDescription>
+            </div>
+            <div>
+              <DialogClose asChild>
+                <GradientButton onClick={() => onClose()}>X</GradientButton>
+              </DialogClose>
+            </div>
+          </div>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -69,10 +81,10 @@ const ModalAgregarCostoExtra = ({ open, onClose, onSave, initialData }) => {
             onChange={(e) => setCostoUnitario(e.target.value)}
           />
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="secondary" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button onClick={handleSave}>{initialData ? 'Guardar cambios' : 'Guardar'}</Button>
+            <GradientButton onClick={onClose}>Cancelar</GradientButton>
+            <GradientButton onClick={handleSave}>
+              {initialData ? 'Guardar cambios' : 'Guardar'}
+            </GradientButton>
           </div>
         </div>
       </DialogContent>

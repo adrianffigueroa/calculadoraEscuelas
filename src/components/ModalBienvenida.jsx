@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Info } from 'lucide-react';
+import { GradientButton } from './ui/GradientButton';
 
 const ModalBienvenida = () => {
   const [open, setOpen] = useState(true);
@@ -17,41 +17,39 @@ const ModalBienvenida = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-xl text-gray-800">
-        <div className="flex items-center space-x-2">
-          <Info className="text-blue-600" />
-          <h2 className="text-lg font-semibold">¡Bienvenido/a!</h2>
+      <DialogContent className="max-w-xl text-gray-800 [&>button:last-of-type]:hidden">
+        <div className="flex items-center space-x-2 justify-between">
+          <div className="flex items-center space-x-2">
+            <Info className="text-red-800" />
+            <h2 className="text-lg font-semibold">¡Bienvenido/a!</h2>
+          </div>
+          <DialogClose asChild>
+            <GradientButton onClick={handleCerrar}>X</GradientButton>
+          </DialogClose>
         </div>
-
         <div className="space-y-4 mt-2">
           <p>
-            Te presentamos la{' '}
-            <strong>calculadora de Costos de Programas de Formación Docente</strong>. La calculadora
-            está diseñada para apoyar las propuestas de formación a partir de la estimación de
-            costos. Los datos se ajustan según{' '}
+            Compartimos de modo abierto el acceso a la{' '}
+            <strong>calculadora de Costos de Programas de Formación Docente Continua</strong>. Es
+            una herramienta diseñada para apoyar las propuestas de formación a partir de un esquema
+            de estimación de costos. <br />
             <em>
-              la provincia, los departamentos, y el volúmen de las escuelas y docentes que esperas
-              alcanzar
+              Los datos se ajustan según la provincia, los departamentos, y el volúmen de unidades
+              educativas y docentes que se esperan alcanzar.
             </em>
-            .
           </p>
           <p>
             De forma predefinida te brinda opciones de costos por provincia, y también te permite
             ajustarlos manualmente de acuerdo a tus estimaciones. El proceso se organiza en bloques
             ordenados por componentes de costeo.
           </p>
-          <p className="text-sm text-muted-foreground">
-            Explorá las opciones, ajustá los costos, definí los recursos y luego exportá en PDF o
-            CSV.
-            <br />
+          <p className="text-sm">
             ¡Esperamos que esta herramienta sea una ayuda para la planificación de políticas!
           </p>
         </div>
 
         <DialogFooter className="mt-4">
-          <Button onClick={handleCerrar} className="bg-blue-500 hover:bg-blue-600">
-            EMPEZAR
-          </Button>
+          <GradientButton onClick={handleCerrar}>EMPEZAR</GradientButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -18,6 +18,9 @@ const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
 const GastosVariablesAccordion = ({
   gastosVariables = initialGastosVariables,
   setGastosVariables,
+  docentesObjetivo,
+  docentesRurales,
+  diasObjetivo,
 }) => {
   const { costosUnitarios, loading } = useCostosUnitarios();
   const { costosAjustados } = useCostosAjustados();
@@ -88,10 +91,6 @@ const GastosVariablesAccordion = ({
     );
   };
 
-  const calcularCostoTotal = (cantidad, costoUnitario) => {
-    return cantidad * costoUnitario;
-  };
-
   const handleSaveExtra = (extra) => {
     setExtrasVariables((prev) => {
       const exists = prev.find((e) => e.id === extra.id);
@@ -106,21 +105,37 @@ const GastosVariablesAccordion = ({
     setExtrasVariables((prev) => prev.filter((e) => e.id !== id));
   };
 
+  const calcularCostoTotal = (subitem, costoUnitario) => {
+    const nombre = subitem.name.toLowerCase();
+    if (nombre.includes('transporte')) {
+      return subitem.cantidad * costoUnitario * diasObjetivo * (docentesObjetivo - docentesRurales);
+    } else if (nombre.includes('combustible')) {
+      return subitem.cantidad * costoUnitario * diasObjetivo * docentesRurales;
+    } else if (nombre.includes('refrigerio')) {
+      return subitem.cantidad * costoUnitario * diasObjetivo * docentesObjetivo;
+    } else {
+      return subitem.cantidad * costoUnitario * docentesObjetivo;
+    }
+  };
+
   return (
     <>
       <Accordion type="multiple" className="w-full space-y-2">
         {gastosVariables.map((grupo, index) => (
           <AccordionItem key={index} value={`item-${index}`}>
-            <AccordionTrigger className="text-lg font-medium">{grupo.item}</AccordionTrigger>
+            <AccordionTrigger className="ps-4 text-lg text-white font-bold bg-[linear-gradient(to_right,_rgb(44,61,87),_rgb(104,121,136))] hover:bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl/30 hover:cursor-pointer">
+              {grupo.item.toUpperCase()}
+            </AccordionTrigger>
             <AccordionContent>
               <div className="overflow-x-auto">
                 <table className="min-w-full text-left text-sm">
                   <thead>
                     <tr>
-                      <th className="px-4 py-2">Subítem</th>
-                      <th className="px-4 py-2">Cantidad</th>
-                      <th className="px-4 py-2">Costo Unitario</th>
-                      <th className="px-4 py-2">Costo Total</th>
+                      <th className="px-1 py-2">Subítem</th>
+                      <th className="px-1 py-2">Cantidad</th>
+                      <th className="px-1 py-2">Encuentros</th>
+                      <th className="px-1 py-2">Costo Unitario</th>
+                      <th className="px-1 py-2">Costo Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -130,17 +145,18 @@ const GastosVariablesAccordion = ({
                         costosAjustados[normalizedName] ?? costosUnitarios[normalizedName] ?? 0;
                       return (
                         <tr key={subitem.id}>
-                          <td className="px-4 py-2 text-gray-800">{subitem.name}</td>
-                          <td className="px-4 py-2">
+                          <td className="px-1 py-2 text-gray-800">{subitem.name}</td>
+                          <td className="px-1 py-2">
                             <CantidadInput
                               className="border rounded px-2 py-1 w-20"
                               value={subitem.cantidad}
                               onChange={(e) => handleCantidadChange(index, subitem.id, e)}
                             />
                           </td>
-                          <td className="px-4 py-2">$ {costoUnitario.toFixed(2)}</td>
-                          <td className="px-4 py-2">
-                            $ {calcularCostoTotal(subitem.cantidad, costoUnitario).toFixed(2)}
+                          <td className="px-1 py-2"> {diasObjetivo}</td>
+                          <td className="px-1 py-2">$ {costoUnitario.toFixed(2)}</td>
+                          <td className="px-1 py-2">
+                            $ {calcularCostoTotal(subitem, costoUnitario)}
                           </td>
                         </tr>
                       );
@@ -153,29 +169,31 @@ const GastosVariablesAccordion = ({
         ))}
 
         <AccordionItem value="extras">
-          <AccordionTrigger className="text-lg font-medium">Costos Extras</AccordionTrigger>
+          <AccordionTrigger className="ps-4 text-lg text-white font-bold bg-[linear-gradient(to_right,_rgb(44,61,87),_rgb(104,121,136))] hover:bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl/30 hover:cursor-pointer">
+            Costos Extras
+          </AccordionTrigger>
           <AccordionContent>
             <div className="overflow-x-auto">
               <table className="min-w-full text-left text-sm">
                 <thead>
                   <tr>
-                    <th className="px-4 py-2">Nombre</th>
-                    <th className="px-4 py-2">Cantidad</th>
-                    <th className="px-4 py-2">Costo Unitario</th>
-                    <th className="px-4 py-2">Costo Total</th>
-                    <th className="px-4 py-2">Acciones</th>
+                    <th className="px-1 py-2">Nombre</th>
+                    <th className="px-1 py-2">Cantidad</th>
+                    <th className="px-1 py-2">Costo Unitario</th>
+                    <th className="px-1 py-2">Costo Total</th>
+                    <th className="px-1 py-2">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {extrasVariables.map((extra) => (
                     <tr key={extra.id}>
-                      <td className="px-4 py-2">{extra.name}</td>
-                      <td className="px-4 py-2">{extra.cantidad}</td>
-                      <td className="px-4 py-2">${extra.costoUnitario.toFixed(2)}</td>
-                      <td className="px-4 py-2">
+                      <td className="px-1 py-2">{extra.name}</td>
+                      <td className="px-1 py-2">{extra.cantidad}</td>
+                      <td className="px-1 py-2">${extra.costoUnitario.toFixed(2)}</td>
+                      <td className="px-1 py-2">
                         ${(extra.cantidad * extra.costoUnitario).toFixed(2)}
                       </td>
-                      <td className="px-4 py-2 space-x-2">
+                      <td className="px-1 py-2 space-x-2">
                         <Button
                           size="sm"
                           variant="secondary"
@@ -211,7 +229,7 @@ const GastosVariablesAccordion = ({
       </Accordion>
 
       <Button
-        className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow"
+        className="mt-4 ps-4 text-lg text-white font-bold bg-[linear-gradient(to_right,_rgb(44,61,87),_rgb(104,121,136))] hover:bg-[linear-gradient(to_right,_#2e8b84,_#75c3b9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl/30 hover:cursor-pointer"
         onClick={() => {
           setEditingExtra(null);
           setIsModalOpen(true);
