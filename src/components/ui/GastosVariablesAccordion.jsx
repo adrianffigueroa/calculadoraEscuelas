@@ -107,11 +107,14 @@ const GastosVariablesAccordion = ({
 
   const calcularCostoTotal = (subitem, costoUnitario) => {
     const nombre = subitem.name.toLowerCase();
+
     if (nombre.includes('transporte')) {
       return subitem.cantidad * costoUnitario * diasObjetivo * (docentesObjetivo - docentesRurales);
     } else if (nombre.includes('combustible')) {
       return subitem.cantidad * costoUnitario * diasObjetivo * docentesRurales;
-    } else if (nombre.includes('refrigerio')) {
+    } else if (nombre.includes('bebida')) {
+      return subitem.cantidad * costoUnitario * diasObjetivo * docentesObjetivo;
+    } else if (nombre.includes('comida')) {
       return subitem.cantidad * costoUnitario * diasObjetivo * docentesObjetivo;
     } else {
       return subitem.cantidad * costoUnitario * docentesObjetivo;
