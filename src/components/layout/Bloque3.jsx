@@ -15,6 +15,7 @@ import { GradientButton } from '../ui/GradientButton';
 import ModalAgregarFinanciamiento from '../ui/ModalAgregarFianciamiento';
 import { Button } from '../ui/button';
 import { parse } from 'papaparse';
+import { formatNumber } from '@/utils/formatNumber';
 
 const Bloque3 = ({
   presupuestoProvincial,
@@ -152,15 +153,15 @@ const Bloque3 = ({
             <div className="text-start">
               <h2 className="text-xl font-semibold mb-4">Resumen de Presupuesto</h2>
               <p>
-                Provincial: ${presupuestoProvincial} (
+                Provincial: ${formatNumber(presupuestoProvincial)} (
                 {total > 0 ? ((presupuestoProvincial / total) * 100).toFixed(0) + '%' : '0%'})
               </p>
               <p>
-                Nacional: ${presupuestoNacional} (
+                Nacional: ${formatNumber(presupuestoNacional)} (
                 {total > 0 ? ((presupuestoNacional / total) * 100).toFixed(0) + '%' : '0%'})
               </p>
               <p>
-                Internacional: ${presupuestoInternacional} (
+                Internacional: ${formatNumber(presupuestoInternacional)} (
                 {total > 0 ? ((presupuestoInternacional / total) * 100).toFixed(0) + '%' : '0%'})
               </p>
               <p>
@@ -168,10 +169,12 @@ const Bloque3 = ({
                   <>
                     <span>
                       Extra: $
-                      {parseFloat(
-                        financiamientoExtra.reduce(
-                          (total, item) => parseFloat(total) + parseFloat(item.monto),
-                          0
+                      {formatNumber(
+                        parseFloat(
+                          financiamientoExtra.reduce(
+                            (total, item) => parseFloat(total) + parseFloat(item.monto),
+                            0
+                          )
                         )
                       )}
                     </span>{' '}
@@ -194,9 +197,9 @@ const Bloque3 = ({
               </p>
 
               <hr className="my-2" />
-              <p>Costo Total: ${costoTotalGeneral.toFixed(0)}</p>
-              <p>Presupuesto Total: ${total}</p>
-              <p>Balance: ${total - costoTotalGeneral}</p>
+              <p>Costo Total: ${formatNumber(costoTotalGeneral)}</p>
+              <p>Presupuesto Total: ${formatNumber(total)}</p>
+              <p>Balance: ${formatNumber(total - costoTotalGeneral)}</p>
             </div>
 
             {/* Columna 3: Gráfico */}

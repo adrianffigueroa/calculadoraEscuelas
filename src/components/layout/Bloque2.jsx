@@ -4,12 +4,12 @@ import { HandCoinsIcon } from 'lucide-react';
 import GastosVariablesAccordion from '../ui/GastosVariablesAccordion';
 import GastosFijosAccordion from '../ui/GastosFijosAccordion';
 import ResumenDeCostos from '../ui/ResumenDeCostos';
-import useCostosUnitarios from '@/hooks/useCostosUnitarios';
+//import useCostosUnitarios from '@/hooks/useCostosUnitarios';
+//import { fetchCostosUnitarios } from '@/hooks/useCostosUnitarios';
 import ModalAjusteCostos from '../ui/ModalAjusteCostos';
 import SimplePieChart from '../ui/SimplePieChart';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
 import { GradientButton } from '../ui/GradientButton';
-import { initialGastosFijos } from '@/data/initialGastos';
 
 const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
 
@@ -22,20 +22,21 @@ const Bloque2 = ({
   gastosVariables,
   setGastosVariables,
   costosExtras,
-  setCostosExtras,
+  // setCostosExtras,
   costoTotalGeneral,
   setCostoTotalGeneral,
   diasObjetivo,
-  setDiasObjetivo,
-  escuelasObjetivo,
-  setEscuelasObjetivo,
+  // setDiasObjetivo,
+  // escuelasObjetivo,
+  // setEscuelasObjetivo,
   docentesObjetivo,
-  setDocentesObjetivo,
+  // setDocentesObjetivo,
   docentesRurales,
-  setDocentesRurales,
+  // setDocentesRurales,
+  costosUnitarios,
 }) => {
   const { costosAjustados } = useCostosAjustados();
-  const { costosUnitarios, loading } = useCostosUnitarios();
+  //let costosUnitarios = fetchCostosUnitarios();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pieChartsRef = useRef();
 
@@ -74,39 +75,39 @@ const Bloque2 = ({
   }, [totalPorCategoriaFijos, totalPorCategoriaVariables]);
 
   // 🛠️ Manejo de Costos Extras
-  const handleAgregarCostoExtra = () => {
-    setCostosExtras((prev) => [
-      ...prev,
-      {
-        id: Math.random().toString(36).substr(2, 9),
-        nombre: '',
-        cantidad: 0,
-        costoUnitario: 0,
-      },
-    ]);
-  };
+  // const handleAgregarCostoExtra = () => {
+  //   setCostosExtras((prev) => [
+  //     ...prev,
+  //     {
+  //       id: Math.random().toString(36).substr(2, 9),
+  //       nombre: '',
+  //       cantidad: 0,
+  //       costoUnitario: 0,
+  //     },
+  //   ]);
+  // };
 
-  const handleCambioNombreExtra = (id, newNombre) => {
-    setCostosExtras((prev) =>
-      prev.map((extra) => (extra.id === id ? { ...extra, nombre: newNombre } : extra))
-    );
-  };
+  // const handleCambioNombreExtra = (id, newNombre) => {
+  //   setCostosExtras((prev) =>
+  //     prev.map((extra) => (extra.id === id ? { ...extra, nombre: newNombre } : extra))
+  //   );
+  // };
 
-  const handleCambioCantidadExtra = (id, newCantidad) => {
-    setCostosExtras((prev) =>
-      prev.map((extra) =>
-        extra.id === id ? { ...extra, cantidad: parseInt(newCantidad) || 0 } : extra
-      )
-    );
-  };
+  // const handleCambioCantidadExtra = (id, newCantidad) => {
+  //   setCostosExtras((prev) =>
+  //     prev.map((extra) =>
+  //       extra.id === id ? { ...extra, cantidad: parseInt(newCantidad) || 0 } : extra
+  //     )
+  //   );
+  // };
 
-  const handleCambioCostoUnitarioExtra = (id, newCosto) => {
-    setCostosExtras((prev) =>
-      prev.map((extra) =>
-        extra.id === id ? { ...extra, costoUnitario: parseFloat(newCosto) || 0 } : extra
-      )
-    );
-  };
+  // const handleCambioCostoUnitarioExtra = (id, newCosto) => {
+  //   setCostosExtras((prev) =>
+  //     prev.map((extra) =>
+  //       extra.id === id ? { ...extra, costoUnitario: parseFloat(newCosto) || 0 } : extra
+  //     )
+  //   );
+  // };
 
   return (
     <section className="flex justify-center mb-10">
@@ -125,7 +126,11 @@ const Bloque2 = ({
             {/* Columna 1: Gastos Fijos */}
             <div>
               <h2 className="text-xl font-semibold mb-4">Gastos Fijos (cantidades)</h2>
-              <GastosFijosAccordion gastosFijos={gastosFijos} setGastosFijos={setGastosFijos} />
+              <GastosFijosAccordion
+                gastosFijos={gastosFijos}
+                setGastosFijos={setGastosFijos}
+                costosUnitarios={costosUnitarios}
+              />
             </div>
 
             {/* Columna 2: Gastos Variables */}
@@ -138,6 +143,7 @@ const Bloque2 = ({
                 departamentos={departamentos}
                 docentesRurales={docentesRurales}
                 diasObjetivo={diasObjetivo}
+                costosUnitarios={costosUnitarios}
               />
             </div>
 
@@ -152,6 +158,9 @@ const Bloque2 = ({
                 cantidadEscuelas={cantidadEscuelas}
                 costoTotalGeneral={costoTotalGeneral}
                 setCostoTotalGeneral={setCostoTotalGeneral}
+                diasObjetivo={diasObjetivo}
+                docentesObjetivo={docentesObjetivo}
+                docentesRurales={docentesRurales}
               />
               <div className="mt-6">
                 <GradientButton onClick={() => setIsModalOpen(true)}>
@@ -164,12 +173,20 @@ const Bloque2 = ({
 
           {/* 🎯 PieCharts */}
           <div ref={pieChartsRef} className="flex justify-center gap-4 mt-10">
-            <SimplePieChart data={totalPorCategoriaFijos} title="Distribución Gastos Fijos" />
+            <SimplePieChart
+              data={totalPorCategoriaFijos}
+              title="Distribución Gastos Fijos"
+              outerRadius={120}
+            />
             <SimplePieChart
               data={totalPorCategoriaVariables}
               title="Distribución Gastos Variables"
             />
-            <SimplePieChart data={fijosVsVariables} title="Distribución Fijos vs Variables" />
+            <SimplePieChart
+              data={fijosVsVariables}
+              title="Distribución Fijos vs Variables"
+              outerRadius={120}
+            />
           </div>
         </CardContent>
       </Card>

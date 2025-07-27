@@ -38,16 +38,15 @@ const Bloque1 = ({
   docentesRurales,
   setDocentesRurales,
 }) => {
-  const { escuelasFiltradas, cantidadEscuelas, cantidadDocentes, loading } =
-    useEscuelasFiltradas(departamentos);
+  const { cantidadEscuelas, cantidadDocentes, loading } = useEscuelasFiltradas(departamentos);
 
   useEffect(() => {
     setEscuelasObjetivo(cantidadEscuelas);
-  }, [cantidadEscuelas]);
+  }, [cantidadEscuelas, setEscuelasObjetivo]);
 
   useEffect(() => {
     setDocentesObjetivo(cantidadDocentes);
-  }, [cantidadDocentes]);
+  }, [cantidadDocentes, setDocentesObjetivo]);
 
   const handleReiniciar = () => {
     setDepartamentos([]);
@@ -55,7 +54,9 @@ const Bloque1 = ({
     setDocentesObjetivo(cantidadDocentes);
   };
   const opcionesDepartamentos = getDepartamentosPorProvincia(provincia);
-
+  useEffect(() => {
+    console.log(docentesRurales);
+  }, [docentesRurales]);
   return (
     <section className="flex justify-center mb-10">
       <Card className="w-13/14 text-center my-4">
@@ -201,7 +202,9 @@ const Bloque1 = ({
         </CardContent>
 
         <CardFooter className={'flex justify-center'}>
-          <GradientButton icon={<RotateCcw />}>REINICIAR</GradientButton>
+          <GradientButton icon={<RotateCcw />} onClick={handleReiniciar}>
+            REINICIAR
+          </GradientButton>
         </CardFooter>
       </Card>
     </section>

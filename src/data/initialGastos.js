@@ -1,19 +1,19 @@
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-export const initialGastosFijos = (cambiarCantidades = false) => [
+export const initialGastosFijos = (docentesObjetivo) => [
   {
     item: 'Equipo técnico-pedagógico a cargo del diseño y monitoreo',
     subitems: [
-      { id: generateId(), name: 'Coordinador/a', cantidad: cambiarCantidades ? 1 : 0 },
+      { id: generateId(), name: 'Coordinador/a', cantidad: docentesObjetivo },
       {
         id: generateId(),
         name: 'Especialista técnico-pedagógico a cargo del diseño y planificación de escuelas seleccionadas',
-        cantidad: cambiarCantidades ? 1 : 0,
+        cantidad: docentesObjetivo,
       },
       {
         id: generateId(),
         name: 'Especialista a cargo del monitoreo, sistematización y análisis de las acciones',
-        cantidad: cambiarCantidades ? 1 : 0,
+        cantidad: docentesObjetivo,
       },
     ],
     extras: [],
@@ -21,14 +21,14 @@ export const initialGastosFijos = (cambiarCantidades = false) => [
   {
     item: 'Equipo docente a cargo de la implementación',
     subitems: [
-      { id: generateId(), name: 'Psicopedagogas', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Especialistas en lengua', cantidad: cambiarCantidades ? 1 : 0 },
+      { id: generateId(), name: 'Psicopedagogas', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Especialistas en lengua', cantidad: docentesObjetivo },
       {
         id: generateId(),
         name: 'Especialistas en matemáticas',
-        cantidad: cambiarCantidades ? 1 : 0,
+        cantidad: docentesObjetivo,
       },
-      { id: generateId(), name: 'Especialistas en EIB', cantidad: cambiarCantidades ? 1 : 0 },
+      { id: generateId(), name: 'Especialistas en EIB', cantidad: docentesObjetivo },
     ],
     extras: [],
   },
@@ -38,7 +38,7 @@ export const initialGastosFijos = (cambiarCantidades = false) => [
       {
         id: generateId(),
         name: 'Diseño de cuadernillos/materiales para las capacitaciones',
-        cantidad: cambiarCantidades ? 20 : 0,
+        cantidad: docentesObjetivo,
       },
     ],
     extras: [],
@@ -46,12 +46,12 @@ export const initialGastosFijos = (cambiarCantidades = false) => [
   {
     item: 'Equipos de imagen y audio',
     subitems: [
-      { id: generateId(), name: 'Micrófonos', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Parlantes', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Proyector', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Pantalla para el proyector', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Router inalámbrico', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Estabilizador de tensión', cantidad: cambiarCantidades ? 1 : 0 },
+      { id: generateId(), name: 'Micrófonos', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Parlantes', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Proyector', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Pantalla para el proyector', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Router inalámbrico', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Estabilizador de tensión', cantidad: docentesObjetivo },
     ],
     extras: [],
   },
@@ -61,57 +61,75 @@ export const initialGastosFijos = (cambiarCantidades = false) => [
       {
         id: generateId(),
         name: 'Licencias para videoconferencias',
-        cantidad: cambiarCantidades ? 1 : 0,
+        cantidad: docentesObjetivo,
       },
     ],
     extras: [],
   },
 ];
 
-export const initialGastosVariables = (cambiarCantidades = false) => [
+export const initialGastosVariables = (docentesObjetivo, docentesRurales) => [
   {
     item: 'Impresión de cuadernillos/materiales para las capacitaciones',
     subitems: [
-      { id: generateId(), name: 'Impresiones (2)', cantidad: cambiarCantidades ? 20 : 0 },
-      { id: generateId(), name: 'Acaballado (3)', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Laminado (3)', cantidad: cambiarCantidades ? 1 : 0 },
+      {
+        id: generateId(),
+        name: 'Impresiones (2)',
+        cantidad: docentesObjetivo,
+      },
+      {
+        id: generateId(),
+        name: 'Acaballado (3)',
+        cantidad: docentesObjetivo,
+      },
+      { id: generateId(), name: 'Laminado (3)', cantidad: docentesObjetivo },
     ],
     extras: [],
   },
   {
     item: 'Abono transporte público',
     subitems: [
-      { id: generateId(), name: 'Abono transporte público', cantidad: cambiarCantidades ? 2 : 0 },
+      {
+        id: generateId(),
+        name: 'Abono transporte público',
+        cantidad: (docentesObjetivo - docentesRurales) * 2,
+      },
     ],
     extras: [],
   },
   {
     item: 'Adicional gasto de combustible',
-    subitems: [
-      { id: generateId(), name: 'Gasto de combustible', cantidad: cambiarCantidades ? 1 : 0 },
-    ],
+    subitems: [{ id: generateId(), name: 'Gasto de combustible', cantidad: docentesRurales }],
     extras: [],
   },
   {
     item: 'Adicional salarial por capacitación',
     subitems: [
-      { id: generateId(), name: 'Adicional salarial', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Presentismo', cantidad: cambiarCantidades ? 1 : 0 },
+      {
+        id: generateId(),
+        name: 'Adicional salarial',
+        cantidad: docentesObjetivo,
+      },
+      { id: generateId(), name: 'Presentismo', cantidad: docentesObjetivo },
     ],
     extras: [],
   },
   {
     item: 'Paquete de datos (6 Gb por 60 días)',
     subitems: [
-      { id: generateId(), name: 'Conectividad móvil', cantidad: cambiarCantidades ? 1 : 0 },
+      {
+        id: generateId(),
+        name: 'Conectividad móvil',
+        cantidad: docentesObjetivo,
+      },
     ],
     extras: [],
   },
   {
     item: 'Refrigerio',
     subitems: [
-      { id: generateId(), name: 'Bebida', cantidad: cambiarCantidades ? 1 : 0 },
-      { id: generateId(), name: 'Comida', cantidad: cambiarCantidades ? 1 : 0 },
+      { id: generateId(), name: 'Bebida', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Comida', cantidad: docentesObjetivo },
     ],
     extras: [],
   },

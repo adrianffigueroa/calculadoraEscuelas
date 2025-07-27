@@ -28,17 +28,19 @@ const SimplePieChart = ({ data, title }) => {
             data={data}
             cx="50%"
             cy="50%"
-            labelLine={false}
-            label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-            outerRadius={100}
+            labelLine={true}
+            label={({ percent }) => (percent > 0.02 ? `${(percent * 100).toFixed(0)}%` : '')}
+            outerRadius={120}
             fill="#8884d8"
             dataKey="value"
+            nameKey="name"
+            position="outside"
           >
             {data?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip cursor={{ fill: 'transparent' }} />
           <Legend verticalAlign="bottom" height={36} />
         </PieChart>
       </ResponsiveContainer>

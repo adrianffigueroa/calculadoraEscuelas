@@ -7,12 +7,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ModalAgregarCostoExtra from './ModalAgregarCostoExtra';
-import useCostosUnitarios from '@/hooks/useCostosUnitarios';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
 import { initialGastosVariables } from '@/data/initialGastos';
 import CantidadInput from '../CantidadInput';
-
-const generateId = () => Math.random().toString(36).substr(2, 9);
+import { formatNumber } from '@/utils/formatNumber';
+// const generateId = () => Math.random().toString(36).substr(2, 9);
 const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
 
 const GastosVariablesAccordion = ({
@@ -21,33 +20,33 @@ const GastosVariablesAccordion = ({
   docentesObjetivo,
   docentesRurales,
   diasObjetivo,
+  costosUnitarios,
 }) => {
-  const { costosUnitarios, loading } = useCostosUnitarios();
   const { costosAjustados } = useCostosAjustados();
 
   const [extrasVariables, setExtrasVariables] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExtra, setEditingExtra] = useState(null);
 
-  const handleAgregarExtra = (index) => {
-    setGastosVariables((prev) =>
-      prev.map((grupo, i) => {
-        if (i !== index) return grupo;
-        return {
-          ...grupo,
-          extras: [
-            ...grupo.extras,
-            {
-              id: generateId(),
-              name: '',
-              cantidad: 0,
-              costoUnitario: 0,
-            },
-          ],
-        };
-      })
-    );
-  };
+  // const handleAgregarExtra = (index) => {
+  //   setGastosVariables((prev) =>
+  //     prev.map((grupo, i) => {
+  //       if (i !== index) return grupo;
+  //       return {
+  //         ...grupo,
+  //         extras: [
+  //           ...grupo.extras,
+  //           {
+  //             id: generateId(),
+  //             name: '',
+  //             cantidad: 0,
+  //             costoUnitario: 0,
+  //           },
+  //         ],
+  //       };
+  //     })
+  //   );
+  // };
 
   const handleCantidadChange = (itemIndex, subitemId, newCantidad, isExtra = false) => {
     setGastosVariables((prev) =>
@@ -64,32 +63,32 @@ const GastosVariablesAccordion = ({
     );
   };
 
-  const handleCostoUnitarioChange = (itemIndex, subitemId, newCosto, isExtra = false) => {
-    setGastosVariables((prev) =>
-      prev.map((grupo, i) => {
-        if (i !== itemIndex) return grupo;
-        const targetArray = isExtra ? grupo.extras : grupo.subitems;
-        return {
-          ...grupo,
-          [isExtra ? 'extras' : 'subitems']: targetArray.map((s) =>
-            s.id === subitemId ? { ...s, costoUnitario: parseFloat(newCosto) || 0 } : s
-          ),
-        };
-      })
-    );
-  };
+  // const handleCostoUnitarioChange = (itemIndex, subitemId, newCosto, isExtra = false) => {
+  //   setGastosVariables((prev) =>
+  //     prev.map((grupo, i) => {
+  //       if (i !== itemIndex) return grupo;
+  //       const targetArray = isExtra ? grupo.extras : grupo.subitems;
+  //       return {
+  //         ...grupo,
+  //         [isExtra ? 'extras' : 'subitems']: targetArray.map((s) =>
+  //           s.id === subitemId ? { ...s, costoUnitario: parseFloat(newCosto) || 0 } : s
+  //         ),
+  //       };
+  //     })
+  //   );
+  // };
 
-  const handleExtraNameChange = (itemIndex, subitemId, newValue) => {
-    setGastosVariables((prev) =>
-      prev.map((grupo, i) => {
-        if (i !== itemIndex) return grupo;
-        return {
-          ...grupo,
-          extras: grupo.extras.map((s) => (s.id === subitemId ? { ...s, name: newValue } : s)),
-        };
-      })
-    );
-  };
+  // const handleExtraNameChange = (itemIndex, subitemId, newValue) => {
+  //   setGastosVariables((prev) =>
+  //     prev.map((grupo, i) => {
+  //       if (i !== itemIndex) return grupo;
+  //       return {
+  //         ...grupo,
+  //         extras: grupo.extras.map((s) => (s.id === subitemId ? { ...s, name: newValue } : s)),
+  //       };
+  //     })
+  //   );
+  // };
 
   const handleSaveExtra = (extra) => {
     setExtrasVariables((prev) => {
@@ -109,9 +108,9 @@ const GastosVariablesAccordion = ({
     const nombre = subitem.name.toLowerCase();
 
     if (nombre.includes('transporte')) {
-      return subitem.cantidad * costoUnitario * diasObjetivo * (docentesObjetivo - docentesRurales);
+      return costoUnitario * diasObjetivo * (docentesObjetivo - docentesRurales) * 2;
     } else if (nombre.includes('combustible')) {
-      return subitem.cantidad * costoUnitario * diasObjetivo * docentesRurales;
+      return costoUnitario * diasObjetivo * docentesRurales;
     } else if (nombre.includes('bebida')) {
       return subitem.cantidad * costoUnitario * diasObjetivo * docentesObjetivo;
     } else if (nombre.includes('comida')) {
@@ -157,9 +156,9 @@ const GastosVariablesAccordion = ({
                             />
                           </td>
                           <td className="px-1 py-2"> {diasObjetivo}</td>
-                          <td className="px-1 py-2">$ {costoUnitario.toFixed(2)}</td>
+                          <td className="px-1 py-2">$ {formatNumber(costoUnitario)}</td>
                           <td className="px-1 py-2">
-                            $ {calcularCostoTotal(subitem, costoUnitario)}
+                            $ {formatNumber(calcularCostoTotal(subitem, costoUnitario))}
                           </td>
                         </tr>
                       );

@@ -33,10 +33,10 @@ const ModalBienvenida = () => {
             <strong>calculadora de Costos de Programas de Formación Docente Continua</strong>. Es
             una herramienta diseñada para apoyar las propuestas de formación a partir de un esquema
             de estimación de costos. <br />
-            <em>
-              Los datos se ajustan según la provincia, los departamentos, y el volúmen de unidades
-              educativas y docentes que se esperan alcanzar.
-            </em>
+          </p>
+          <p>
+            Los datos se ajustan según la provincia, los departamentos, y el volúmen de unidades
+            educativas y docentes que se esperan alcanzar.
           </p>
           <p>
             De forma predefinida te brinda opciones de costos por provincia, y también te permite

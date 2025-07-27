@@ -9,6 +9,7 @@ import {
   DollarSign,
   Download,
 } from 'lucide-react';
+import { formatNumber } from '@/utils/formatNumber';
 
 const Bloque4 = ({
   provincia,

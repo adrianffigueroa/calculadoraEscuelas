@@ -5,21 +5,24 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import useCostosUnitarios from '@/hooks/useCostosUnitarios';
+//import useCostosUnitarios from '@/hooks/useCostosUnitarios';
+import { fetchCostosUnitarios } from '@/hooks/useCostosUnitarios';
 import { useCostosAjustados } from '@/context/CostosAjustadosContext';
 import ModalAgregarCostoExtra from './ModalAgregarCostoExtra';
 import { useState } from 'react';
 import CantidadInput from '../CantidadInput';
-
+import { formatNumber } from '@/utils/formatNumber';
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
+//let costosUnitarios = {};
+const GastosFijosAccordion = ({ gastosFijos = [], setGastosFijos, costosUnitarios }) => {
+  console.log(gastosFijos);
 
-const GastosFijosAccordion = ({ gastosFijos = [], setGastosFijos }) => {
   const [extrasFijos, setExtrasFijos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExtra, setEditingExtra] = useState(null);
-  const { costosUnitarios } = useCostosUnitarios();
+  //costoUnitarios = fetchCostosUnitarios();
   const { costosAjustados } = useCostosAjustados();
 
   const handleSaveExtra = (extra) => {
@@ -134,9 +137,9 @@ const GastosFijosAccordion = ({ gastosFijos = [], setGastosFijos }) => {
                               onChange={(val) => handleCantidadChange(index, subitem.id, val)}
                             />
                           </td>
-                          <td className="px-1 py-2">$ {costoUnitario.toFixed(2)}</td>
+                          <td className="px-1 py-2">$ {formatNumber(costoUnitario)}</td>
                           <td className="px-1 py-2">
-                            $ {calcularCostoTotal(subitem.cantidad, costoUnitario).toFixed(2)}
+                            $ {formatNumber(calcularCostoTotal(subitem.cantidad, costoUnitario))}
                           </td>
                         </tr>
                       );
@@ -169,7 +172,7 @@ const GastosFijosAccordion = ({ gastosFijos = [], setGastosFijos }) => {
                           />
                         </td>
                         <td className="px-1 py-2">
-                          $ {calcularCostoTotal(extra.cantidad, extra.costoUnitario).toFixed(2)}
+                          $ {formatNumber(calcularCostoTotal(extra.cantidad, extra.costoUnitario))}
                         </td>
                       </tr>
                     ))}

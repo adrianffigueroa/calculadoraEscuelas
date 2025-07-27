@@ -7,10 +7,11 @@ import NavBar from './components/NavBar';
 import ModalBienvenida from './components/ModalBienvenida';
 import useEscuelasFiltradas from '@/hooks/useEscuelasFiltradas';
 import { initialGastosFijos, initialGastosVariables } from '@/data/initialGastos';
-import useCostosUnitarios from '@/hooks/useCostosUnitarios';
+// import fetchCostosUnitarios from '@/hooks/useCostosUnitarios';
 import jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image-more';
 import { GradientButton } from './components/ui/GradientButton';
+import { fetchCostosUnitarios } from '@/hooks/useCostosUnitarios';
 
 function App() {
   const bloque1Ref = useRef();
@@ -22,7 +23,6 @@ function App() {
   const pagina1Ref = useRef();
   const pagina2Ref = useRef();
 
-  const { costosUnitarios } = useCostosUnitarios();
   const [provincia, setProvincia] = useState('');
   const [departamentos, setDepartamentos] = useState([]);
   const [presupuestoProvincial, setPresupuestoProvincial] = useState(0);
@@ -37,7 +37,10 @@ function App() {
   const [escuelasObjetivo, setEscuelasObjetivo] = useState(cantidadEscuelas);
   const [docentesObjetivo, setDocentesObjetivo] = useState(cantidadDocentes);
   const [docentesRurales, setDocentesRurales] = useState(0);
+  const [docentesCiudad, setDocentesCiudad] = useState(0);
   const [costoTotalGeneral, setCostoTotalGeneral] = useState(0);
+  const [costosUnitarios, setCostosUnitarios] = useState({});
+
   const calcularTotalCostos = () => {
     const normalizeName = (name) => name.replace(/\s*\(\d+\)\s*/g, '').trim();
     const sumGrupo = (grupo) =>
@@ -109,10 +112,33 @@ function App() {
   };
 
   useEffect(() => {
+    const hayProvinciaValida =
+      typeof provincia === 'string' &&
+      provincia.trim() !== '' &&
+      provincia !== 'null' &&
+      provincia !== 'undefined';
+
+    console.log(typeof provincia);
+    if (!hayProvinciaValida) return;
+
+    const cargarCostos = async () => {
+      console.log('📦 Fetching costos para:', provincia);
+      const { costosUnitarios } = await fetchCostosUnitarios(provincia);
+      setCostosUnitarios(costosUnitarios);
+    };
+
+    cargarCostos();
+    setDepartamentos([]);
+  }, [provincia]);
+
+  useEffect(() => {
     const hayDepartamentos = Array.isArray(departamentos) && departamentos.length > 0;
-    setGastosFijos(initialGastosFijos(hayDepartamentos));
-    setGastosVariables(initialGastosVariables(hayDepartamentos));
-  }, [departamentos]);
+
+    if (hayDepartamentos) {
+      setGastosFijos(initialGastosFijos(docentesObjetivo));
+      setGastosVariables(initialGastosVariables(docentesObjetivo, docentesRurales));
+    }
+  }, [departamentos, docentesObjetivo, docentesRurales]);
 
   return (
     <>
@@ -132,6 +158,8 @@ function App() {
             setDiasObjetivo={setDiasObjetivo}
             docentesRurales={docentesRurales}
             setDocentesRurales={setDocentesRurales}
+            docentesCiudad={docentesCiudad}
+            setDocentesCiudad={setDocentesCiudad}
           />
         </div>
         <div ref={bloque2Ref}>
@@ -152,6 +180,7 @@ function App() {
             diasObjetivo={diasObjetivo}
             setDiasObjetivo={setDiasObjetivo}
             docentesRurales={docentesRurales}
+            costosUnitarios={costosUnitarios}
           />
         </div>
       </div>
