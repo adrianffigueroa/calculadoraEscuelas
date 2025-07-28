@@ -4,16 +4,16 @@ export const initialGastosFijos = (docentesObjetivo) => [
   {
     item: 'Equipo técnico-pedagógico a cargo del diseño y monitoreo',
     subitems: [
-      { id: generateId(), name: 'Coordinador/a', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Coordinador/a', cantidad: docentesObjetivo ? 1 : 0 },
       {
         id: generateId(),
         name: 'Especialista técnico-pedagógico a cargo del diseño y planificación de escuelas seleccionadas',
-        cantidad: docentesObjetivo,
+        cantidad: docentesObjetivo ? 1 : 0,
       },
       {
         id: generateId(),
         name: 'Especialista a cargo del monitoreo, sistematización y análisis de las acciones',
-        cantidad: docentesObjetivo,
+        cantidad: docentesObjetivo ? 1 : 0,
       },
     ],
     extras: [],
@@ -21,14 +21,14 @@ export const initialGastosFijos = (docentesObjetivo) => [
   {
     item: 'Equipo docente a cargo de la implementación',
     subitems: [
-      { id: generateId(), name: 'Psicopedagogas', cantidad: docentesObjetivo },
-      { id: generateId(), name: 'Especialistas en lengua', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Psicopedagogas', cantidad: docentesObjetivo ? 1 : 0 },
+      { id: generateId(), name: 'Especialistas en lengua', cantidad: docentesObjetivo ? 1 : 0 },
       {
         id: generateId(),
         name: 'Especialistas en matemáticas',
-        cantidad: docentesObjetivo,
+        cantidad: docentesObjetivo ? 1 : 0,
       },
-      { id: generateId(), name: 'Especialistas en EIB', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Especialistas en EIB', cantidad: docentesObjetivo ? 1 : 0 },
     ],
     extras: [],
   },
@@ -38,7 +38,7 @@ export const initialGastosFijos = (docentesObjetivo) => [
       {
         id: generateId(),
         name: 'Diseño de cuadernillos/materiales para las capacitaciones',
-        cantidad: docentesObjetivo,
+        cantidad: docentesObjetivo ? 20 : 0,
       },
     ],
     extras: [],
@@ -46,12 +46,12 @@ export const initialGastosFijos = (docentesObjetivo) => [
   {
     item: 'Equipos de imagen y audio',
     subitems: [
-      { id: generateId(), name: 'Micrófonos', cantidad: docentesObjetivo },
-      { id: generateId(), name: 'Parlantes', cantidad: docentesObjetivo },
-      { id: generateId(), name: 'Proyector', cantidad: docentesObjetivo },
-      { id: generateId(), name: 'Pantalla para el proyector', cantidad: docentesObjetivo },
-      { id: generateId(), name: 'Router inalámbrico', cantidad: docentesObjetivo },
-      { id: generateId(), name: 'Estabilizador de tensión', cantidad: docentesObjetivo },
+      { id: generateId(), name: 'Micrófonos', cantidad: docentesObjetivo ? 1 : 0 },
+      { id: generateId(), name: 'Parlantes', cantidad: docentesObjetivo ? 1 : 0 },
+      { id: generateId(), name: 'Proyector', cantidad: docentesObjetivo ? 1 : 0 },
+      { id: generateId(), name: 'Pantalla para el proyector', cantidad: docentesObjetivo ? 1 : 0 },
+      { id: generateId(), name: 'Router inalámbrico', cantidad: docentesObjetivo ? 1 : 0 },
+      { id: generateId(), name: 'Estabilizador de tensión', cantidad: docentesObjetivo ? 1 : 0 },
     ],
     extras: [],
   },
@@ -61,7 +61,7 @@ export const initialGastosFijos = (docentesObjetivo) => [
       {
         id: generateId(),
         name: 'Licencias para videoconferencias',
-        cantidad: docentesObjetivo,
+        cantidad: docentesObjetivo ? 1 : 0,
       },
     ],
     extras: [],

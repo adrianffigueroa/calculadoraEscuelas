@@ -106,20 +106,16 @@ const GastosVariablesAccordion = ({
 
   const calcularCostoTotal = (subitem, costoUnitario) => {
     const nombre = subitem.name.toLowerCase();
+    console.log(subitem, costoUnitario);
 
-    if (nombre.includes('transporte')) {
+    if (nombre.includes('transporte'))
       return costoUnitario * diasObjetivo * (docentesObjetivo - docentesRurales) * 2;
-    } else if (nombre.includes('combustible')) {
-      return costoUnitario * diasObjetivo * docentesRurales;
-    } else if (nombre.includes('bebida')) {
-      return subitem.cantidad * costoUnitario * diasObjetivo * docentesObjetivo;
-    } else if (nombre.includes('comida')) {
-      return subitem.cantidad * costoUnitario * diasObjetivo * docentesObjetivo;
-    } else {
-      return subitem.cantidad * costoUnitario * docentesObjetivo;
-    }
+    else if (nombre.includes('combustible')) return costoUnitario * diasObjetivo * docentesRurales;
+    else if (nombre.includes('bebida')) return subitem.cantidad * costoUnitario * diasObjetivo;
+    else if (nombre.includes('comida')) return subitem.cantidad * costoUnitario * diasObjetivo;
+    else if (nombre.includes('impresiones')) return subitem.cantidad * costoUnitario * 20;
+    else return subitem.cantidad * costoUnitario;
   };
-
   return (
     <>
       <Accordion type="multiple" className="w-full space-y-2">
